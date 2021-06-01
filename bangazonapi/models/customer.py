@@ -22,6 +22,6 @@ class Customer(models.Model):
     def recommended(self):
         return self.__recommended
 
-    @recommends.setter
+    @recommended.setter
     def recommended(self, value):
         self.__recommended = value
