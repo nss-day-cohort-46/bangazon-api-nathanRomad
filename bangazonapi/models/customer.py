@@ -7,6 +7,8 @@ class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.DO_NOTHING,)
     phone_number = models.CharField(max_length=15)
     address = models.CharField(max_length=55)
+    # recommends = 
+    # recommended =
 
     @property
     def recommends(self):
@@ -15,3 +17,11 @@ class Customer(models.Model):
     @recommends.setter
     def recommends(self, value):
         self.__recommends = value
+
+    @property
+    def recommended(self):
+        return self.__recommended
+
+    @recommends.setter
+    def recommended(self, value):
+        self.__recommended = value
