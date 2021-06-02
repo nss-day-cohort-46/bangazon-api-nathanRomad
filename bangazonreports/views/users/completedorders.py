@@ -47,16 +47,14 @@ def completed_orders_list(request):
                 completedOrder["orderId"] = row["orderId"]
                 completedOrder["fullName"] = row["fullName"]
                 completedOrder["totalCost"] = row['totalCost']
+                completedOrder["payType"] = row['payType']
 
                 completed_orders_by_cust.append(completedOrder)
-
-        # Get only the values from the dictionary and create a list from them
-        completed_cust_orders_list = completed_orders_by_cust
 
         # Specify the Django template and provide data context
         template = 'users/completed_orders.html'
         context = {
-            'completed_orders_list': completed_cust_orders_list
+            'completed_orders_list': completed_orders_by_cust
         }
 
         return render(request, template, context)
