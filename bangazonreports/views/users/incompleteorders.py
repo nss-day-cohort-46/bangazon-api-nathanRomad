@@ -17,56 +17,43 @@ def incomplete_orders_list(request):
             db_cursor.execute("""
                 SELECT
                     o.id orderId,
-                    c.id custId,
                     u.first_name || ' ' || u.last_name AS fullName,
                     SUM(p.price) AS totalCost
-                FROM
-                    bangazonapi_customer c
-                JOIN
-                    auth_user u ON c.id = u.id
-                JOIN 
-                    bangazonapi_order o ON o.customer_id = custId
+                FROM 
+                    bangazonapi_order o
                 JOIN 
                     bangazonapi_orderproduct op ON o.id = op.order_id
                 JOIN 
                     bangazonapi_product p ON op.product_id = p.id
+                JOIN 
+                    bangazonapi_customer c ON o.customer_id = c.id
+                JOIN 
+                    auth_user u ON u.id = c.user_id
+                WHERE 
+                    payment_type_id IS NULL
                 GROUP BY 
-                    custId
+                    o.customer_id
             """)
 
             dataset = db_cursor.fetchall()
 
-            favseller_by_cust = {}
+            incomplete_orders_by_cust = []
 
             for row in dataset:
-                # Crete a Game instance and set its properties
-                favorite = Customer()
-                favorite.id = row['seller']
-                favorite.name = row['sellerName']
+                incompleteOrder = {}
+                incompleteOrder["orderId"] = row["orderId"]
+                incompleteOrder["fullName"] = row["fullName"]
+                incompleteOrder["totalCost"] = row['totalCost']
 
-                # Store the user's id
-                uid = row["custId"]
-
-                # If the user's id is already a key in the dictionary...
-                if uid in favseller_by_cust:
-
-                    # Add the current game to the `games` list for it
-                    favseller_by_cust[uid]['seller'].append(favorite)
-
-                else:
-                    # Otherwise, create the key and dictionary value
-                    favseller_by_cust[uid] = {}
-                    favseller_by_cust[uid]["id"] = uid
-                    favseller_by_cust[uid]["fullName"] = row["fullName"]
-                    favseller_by_cust[uid]["seller"] = [favorite]
+                incomplete_orders_by_cust.append(incompleteOrder)
 
         # Get only the values from the dictionary and create a list from them
-        list_of_users_with_favs = favseller_by_cust.values()
+        incomplete_cust_orders = incomplete_orders_by_cust
 
         # Specify the Django template and provide data context
-        template = 'users/favsellerbycust.html'
+        template = 'users/incomplete_orders.html'
         context = {
-            'favseller_list': list_of_users_with_favs
+            'incomplete_orders_list': incomplete_cust_orders
         }
 
         return render(request, template, context)
