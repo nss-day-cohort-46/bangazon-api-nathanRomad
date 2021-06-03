@@ -64,7 +64,8 @@ class Product(SafeDeleteModel):
         try:
             avg = total_rating / len(ratings)
             return avg
-        except: len(ratings) != 0
+        except: ZeroDivisionError
+        pass
 
     class Meta:
         verbose_name = ("product")
