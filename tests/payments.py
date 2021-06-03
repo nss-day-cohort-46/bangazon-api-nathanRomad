@@ -3,7 +3,6 @@ import json
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-
 class PaymentTests(APITestCase):
     def setUp(self) -> None:
         """
@@ -16,7 +15,6 @@ class PaymentTests(APITestCase):
         json_response = json.loads(response.content)
         self.token = json_response["token"]
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
 
     def test_create_payment_type(self):
         """
@@ -56,8 +54,6 @@ class PaymentTests(APITestCase):
         self.test_create_payment_type()
         #entire product is represented here
         url = "/paymenttypes/1"
-
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         response = self.client.get(url)
