@@ -112,7 +112,9 @@ class ProductTests(APITestCase):
                     "average_rating": 1.0
                 }
         """
+        #Create a product, so we can test deleting said product
         self.test_create_product()
+        #entire product is represented here
         url = "/products/1"
 
         response = self.client.delete(url)
