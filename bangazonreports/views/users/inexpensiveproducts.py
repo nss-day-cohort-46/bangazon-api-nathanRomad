@@ -33,6 +33,9 @@ def inexpensive_products_list(request):
                 inexpensiveProduct["price"] = row["price"]
 
                 inexpensive_products.append(inexpensiveProduct)
+                
+        ## DJANGO ORM version of SQL query above
+        #products = Product.objects.filter(price__lte=999).values('name', 'price', 'description')
 
         # Specify the Django template and provide data context
         template = 'users/inexpensive_products.html'
