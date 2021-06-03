@@ -98,3 +98,27 @@ class ProductTests(APITestCase):
     # TODO: Delete product
 
     # TODO: Product can be rated. Assert average rating exists.
+    def test_ratings(self):
+        #creating new product to test
+        self.test_create_product()
+        #defines the route where ratings can be added
+        #URL endpoint defined by line 300 in views/product.py
+        url = "/products/1/ratings"
+
+        #data to be ammended
+        data = {
+            "score": 1
+        }
+        #self.client.post is like a fetch call
+        #post to the designated URL with assigned data in JSON format
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        #define new URL path to be tested (GET)
+        url = "/products/1"
+
+        #GET URL
+        response = self.client.get(url)
+        #loads content
+        json_response = json.loads(response.content)
+        self.assertEqual(json_response["average_rating"], 1)
