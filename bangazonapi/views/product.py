@@ -103,7 +103,8 @@ class Products(ViewSet):
             data = ContentFile(base64.b64decode(imgstr), name=f'{new_product.id}-{request.data["name"]}.{ext}')
 
             new_product.image_path = data
-
+        
+        new_product.clean_fields()
         new_product.save()
 
         serializer = ProductSerializer(
@@ -270,7 +271,7 @@ class Products(ViewSet):
 
         if number_sold is not None:
             def sold_filter(product):
-                if product.number_sold <= int(number_sold):
+                if product.number_sold >= int(number_sold):
                     return True
                 return False
 
