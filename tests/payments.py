@@ -3,7 +3,6 @@ import json
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-
 class PaymentTests(APITestCase):
     def setUp(self) -> None:
         """
@@ -16,7 +15,6 @@ class PaymentTests(APITestCase):
         json_response = json.loads(response.content)
         self.token = json_response["token"]
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
 
     def test_create_payment_type(self):
         """
@@ -40,4 +38,23 @@ class PaymentTests(APITestCase):
         self.assertEqual(json_response["expiration_date"], "2024-12-31")
         self.assertEqual(json_response["create_date"], str(datetime.date.today()))
 
-    # TODO: Delete payment type
+    def test_delete_payment(self):
+        """
+            Ensure we can delete an existing payment.
+                {
+                    "id": 1,
+                    "url": "http://localhost:8000/paymenttypes/1",
+                    "merchant_name": "Visa",
+                    "account_number": "24ijio68948fj8439",
+                    "expiration_date": "2020-01-01",
+                    "create_date": "2019-11-11"
+                }
+        """
+        #Create a product, so we can test deleting said product
+        self.test_create_payment_type()
+        #entire product is represented here
+        url = "/paymenttypes/1"
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
