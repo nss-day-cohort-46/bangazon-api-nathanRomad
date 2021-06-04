@@ -4,7 +4,6 @@ from django.shortcuts import render
 from bangazonapi.models import Customer
 from bangazonreports.views import Connection
 
-
 def completed_orders_list(request):
     """Function to build an HTML report of games by user"""
     if request.method == 'GET':
