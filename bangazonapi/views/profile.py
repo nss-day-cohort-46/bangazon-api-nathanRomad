@@ -185,7 +185,7 @@ class Profile(ViewSet):
                 cart = {}
                 cart["order"] = OrderSerializer(open_order, many=False, context={
                                                 'request': request}).data
-                cart["order"]["line_items"] = line_items.data
+                cart["order"]["lineitems"] = line_items.data
                 cart["order"]["size"] = len(line_items.data)
 
             except Order.DoesNotExist as ex:
